@@ -1,0 +1,14 @@
+.upload {
+  .label {
+    font-size: 16px;
+    color: #2d2d2d;
+    margin-bottom: 5px;
+  }
+  .preview {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    margin-top: 16px;
+  }
+}
