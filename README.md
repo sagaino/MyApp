@@ -1,5 +1,5 @@
 # Getting Started with Create React App
-LINK : https://my-app-ino.vercel.app/
+LINK App : https://my-app-ino.vercel.app/
 
 ## Available Scripts
 
