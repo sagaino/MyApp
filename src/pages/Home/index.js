@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 // import { Link } from "react-router-dom";
-import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button, DataItem, Gap } from "../../components";
 import "./home.scss";
+import { setDataItem } from "../../config/redux/action";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [dataItem, setDataItem] = useState([]);
+  const { dataItem } = useSelector((state) => state.homeReducer);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    Axios.get("https://server-ino.herokuapp.com/api/v1/product")
-      .then((result) => {
-        console.log("data : ", result.data);
-        const responAPI = result.data;
-        setDataItem(responAPI.data);
-      })
-      .catch((err) => {
-        console.log("error : ", err);
-      });
-  }, []);
+    dispatch(setDataItem());
+  }, [dispatch]);
+
+  const API_IMG = "https://server-ino.herokuapp.com";
   return (
     <div className="home-page-wrapper">
       <div className="create-wrapper">
@@ -30,10 +27,11 @@ const Home = () => {
           return (
             <DataItem
               key={item.id}
-              image={`https://server-ino.herokuapp.com${item.image}`}
+              image={`${API_IMG}${item.image}`}
               title={item.name}
               price={item.price}
               stock={item.stock}
+              desc={item.description}
             />
           );
         })}
