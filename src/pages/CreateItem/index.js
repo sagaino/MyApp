@@ -5,6 +5,7 @@ import "./createItem.scss";
 
 const CreateItem = () => {
   const navigate = useNavigate();
+
   return (
     <div className="item-post">
       <div className="link">
