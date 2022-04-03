@@ -1,14 +1,15 @@
 import { Button, Gap, Input, Link, Upload } from "../../components";
 import TextArea from "../../components/atoms/TextArea";
-import { useNavigate } from "react-router-dom";
-import "./createItem.scss";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import "../CreateItem/createItem.scss";
+import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import { setProduct } from "../../services/product";
+import { setDetailProduct, setEditProduct } from "../../services/product";
 
-const CreateItem = () => {
+const EditItem = () => {
   const navigate = useNavigate();
+  const params = useParams();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
@@ -16,19 +17,37 @@ const CreateItem = () => {
   const [image, setImage] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
 
+  useEffect(() => {
+    async function fetchData() {
+      const API_IMG = "https://server-ino.herokuapp.com";
+      const id = params.id;
+      if (id) {
+        const result = await setDetailProduct(id);
+        const res = result.data;
+        setName(res.name);
+        setPrice(res.price);
+        setStock(res.stock);
+        setDescription(res.description);
+        setImagePreview(`${API_IMG}${res.image}`);
+      }
+    }
+    fetchData();
+  }, [params]);
+
   const onSubmit = async () => {
+    const id = params.id;
+
     const data = new FormData();
     data.append("name", name);
     data.append("price", price);
     data.append("stock", stock);
     data.append("description", description);
     data.append("image", image);
-    console.log(data.name);
-    const result = await setProduct(data);
+    const result = await setEditProduct(data, id);
     if (result.error) {
       toast.configure();
       toast.error(result.message);
-      navigate("/create-item");
+      navigate("/");
     } else {
       toast.configure();
       toast.success(result.message);
@@ -47,7 +66,7 @@ const CreateItem = () => {
       <div className="link">
         <Link title="Kembali" onClick={() => navigate(-1)} />
       </div>
-      <p className="title">Add new item</p>
+      <p className="title">Edit item</p>
       <Input
         label="Title"
         value={name}
@@ -69,11 +88,11 @@ const CreateItem = () => {
         onChange={(e) => setDescription(e.target.value)}
       />
       <div className="button-action">
-        <Button title="save" onClick={onSubmit} />
+        <Button title="update" onClick={onSubmit} />
       </div>
       <Gap height={20} />
     </div>
   );
 };
 
-export default CreateItem;
+export default EditItem;
